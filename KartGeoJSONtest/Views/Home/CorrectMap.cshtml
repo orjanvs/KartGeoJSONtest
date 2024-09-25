@@ -1,0 +1,74 @@
+﻿@model KartGeoJSONtest.Models.PositionModel
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1> Registrer feil i kartet</h1>
+    </div>
+</div>
+
+<div class="container py-5">
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label">Latitude</label>
+            <input type="text" class="form-control" id="latitude" asp-for="Latitude" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Longitude</label>
+            <input type="text" class="form-control" id="longitude" asp-for="Longitude" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input type="text" class="form-control" id="description" asp-for="Description" />
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-dark">Submit</button>
+        </div>
+    </form>
+</div>
+
+<div id="map" style="height: 600px;"></div>
+
+@section Scripts {
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([51.505, -0.09], 15);
+
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy <a href="https://www.openstreetmap.org/copyright" > OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Eventlistener for click on map
+        map.on('click', function (e) {
+            
+            // Remove existing markers from the map
+            map.eachLayer(function (layer) {
+                if (layer instanceof L.Marker) {
+                    map.removeLayer(layer);
+                }
+            });
+
+            // Get clicked position
+            var lat = e.latlng.lat;
+            var long = e.latlng.lng;
+
+            document.getElementById('latitude').value = lat;
+            document.getElementById('longitude').value = long;
+
+            // Add marker to map
+            L.marker([lat, long]).addTo(map); 
+
+        });
+
+    </script> 
+}
+
